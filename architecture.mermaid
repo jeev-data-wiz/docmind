@@ -1,0 +1,45 @@
+flowchart TD
+    subgraph INGEST["✍️ WRITE PATH — Ingestion Pipeline"]
+        direction LR
+        C1[("📄 corpus/\n*.pdf *.md *.txt")]
+        L["DocumentLoader\nextract text + metadata"]
+        CH["RecursiveChunker\n512-token chunks\n64-token overlap"]
+        EM["Embedder\nall-MiniLM-L6-v2\n(local, free)"]
+        VS[("🗄️ VectorStore\nChromaDB\nHNSW index")]
+        C1 --> L --> CH --> EM --> VS
+    end
+
+    subgraph AGENT["🤖 READ PATH — ReAct Agent Loop"]
+        direction TB
+        Q["User Query"]
+        A["DocMind Agent\nReAct Reasoning Loop\nThought → Action → Observation"]
+        TE["Tool Executor"]
+        T1["🔍 retrieve\nvector search"]
+        T2["📋 list_documents\ncorpus index"]
+        T3["📝 summarise_document\nLLM summary"]
+        T4["📅 filter_by_date\ndate-range search"]
+        T5["✅ finish\nfinal answer"]
+        LLM["LLM\nClaude 3.5 Haiku\n(or GPT-4o-mini)"]
+
+        Q --> A
+        A <-->|"JSON: thought/action/observation"| LLM
+        A --> TE
+        TE --> T1 & T2 & T3 & T4 & T5
+        T1 & T4 <-->|"embed + search"| VS
+        T2 <-->|"list metadata"| VS
+        T3 <-->|"fetch chunks + summarise"| LLM
+    end
+
+    subgraph OUT["📤 Output"]
+        ANS["Answer\n+ Sources\n+ Confidence\n+ Step Trace"]
+        OBS["📊 logs/agent_traces.jsonl\nStructured JSONL traces"]
+    end
+
+    T5 --> ANS
+    A --> OBS
+
+    style INGEST fill:#1a1a2e,stroke:#4a9eff,color:#fff
+    style AGENT fill:#16213e,stroke:#4a9eff,color:#fff
+    style OUT fill:#0f3460,stroke:#4a9eff,color:#fff
+    style VS fill:#533483,stroke:#7b52ab,color:#fff
+    style LLM fill:#533483,stroke:#7b52ab,color:#fff

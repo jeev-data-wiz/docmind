@@ -1,0 +1,24 @@
+# DocMind AI Agent — Python dependencies
+# Install with: pip install -r requirements.txt
+
+# ── Core ML / Embeddings ──────────────────────────────────────────────────────
+sentence-transformers>=2.6.0      # Local embeddings (default, free, no API key)
+torch>=2.0.0                      # Required by sentence-transformers
+
+# ── Vector Store ─────────────────────────────────────────────────────────────
+chromadb>=0.5.0                   # Local persistent vector store
+
+# ── LLM Providers ─────────────────────────────────────────────────────────────
+anthropic>=0.28.0                 # Anthropic Claude API (default LLM)
+openai>=1.30.0                    # OpenAI API (optional alternative)
+
+# ── Document Parsing ──────────────────────────────────────────────────────────
+pypdf>=4.0.0                      # PDF text extraction
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+numpy>=1.24.0                     # Array operations for embeddings
+python-dotenv>=1.0.0              # Load .env files for API keys
+
+# ── Optional: development / testing ──────────────────────────────────────────
+# pytest>=8.0.0
+# pytest-cov>=5.0.0
