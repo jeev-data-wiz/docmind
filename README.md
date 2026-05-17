@@ -107,17 +107,15 @@ OpenAI gives 1536-dim embeddings with better multilingual support and higher acc
 
 ---
 
-### 4. LLM: Claude 3.5 Haiku (Anthropic)
+### 4. LLM: Grok
 
-**What:** Claude 3.5 Haiku via the Anthropic API.
+**What:** llama-3.1-8b-instant
 
 **Why:**
-- Fastest Claude model — critical for multi-step agent loops where each step adds latency
 - 200k token context window — can handle many retrieved chunks simultaneously
 - Excellent instruction-following for the strict JSON output format the agent requires
-- Cost-effective for prototype workloads (~$0.001 per query)
+- Cost-effective for prototype workloads 
 
-**Tradeoff:** Requires an Anthropic API key. The system supports OpenAI as a drop-in alternative via one env var change.
 
 ---
 
@@ -199,7 +197,7 @@ docmind/
 
 - Python 3.10 or higher
 - pip
-- An Anthropic API key **or** an OpenAI API key
+- A Grok API Key
 
 ---
 
@@ -230,29 +228,20 @@ pip install -r requirements.txt
 
 This installs: `sentence-transformers`, `chromadb`, `anthropic`, `pypdf`, `numpy`, `python-dotenv`.
 
-> **Note:** The first run will download the `all-MiniLM-L6-v2` model (~80MB) automatically.
+
 
 ---
 
-### Step 4: Configure your API key
+### Step 4: Configure API key
 
 ```bash
 cp .env.example .env
 ```
 
-Open `.env` in any text editor and add your API key:
+Open `.env` in any text editor and add the API key:
 
 ```
-ANTHROPIC_API_KEY=sk-ant-xxxxxxxx...
-```
-
-Or if using OpenAI:
-```
-LLM_PROVIDER=openai
-LLM_MODEL=gpt-4o-mini
-OPENAI_API_KEY=sk-xxxxxxxx...
-```
-
+GROK_API_KEY=#######
 ---
 
 ### Step 5: Add documents to the corpus
@@ -327,7 +316,7 @@ These 5 questions test the system across difficulty levels:
 
 ---
 
-## What I Would Do With More Time
+## What Can be Done With More Time
 
 ### 1. Semantic Chunking
 Replace recursive character chunking with embedding-based semantic chunking: embed every sentence, detect topic shifts via cosine similarity drops, and chunk at semantic boundaries. This would improve retrieval precision for documents with dense mixed content.
@@ -373,10 +362,8 @@ Each event includes: timestamp, event type, action taken, latency, confidence, a
 
 | Variable              | Default                      | Description                         |
 |-----------------------|------------------------------|-------------------------------------|
-| `ANTHROPIC_API_KEY`   | —                            | Anthropic API key (required)        |
-| `OPENAI_API_KEY`      | —                            | OpenAI API key (optional)           |
-| `LLM_PROVIDER`        | `anthropic`                  | `anthropic` or `openai`             |
-| `LLM_MODEL`           | `claude-3-5-haiku-20241022`  | Model name                          |
+| `LLM_PROVIDER`        | `grok`                       | `Grok`                              |
+| `LLM_MODEL`           | `llama-3.1-8b-instant`       | Model name                          |
 | `EMBEDDING_PROVIDER`  | `sentence-transformers`      | `sentence-transformers` or `openai` |
 | `EMBEDDING_MODEL`     | `all-MiniLM-L6-v2`           | Embedding model name                |
 | `VECTOR_STORE_PATH`   | `.vectorstore`               | Directory for ChromaDB persistence  |
