@@ -1,0 +1,81 @@
+python3 main.py agent "How did the database incident relate to the architecture decisions in the ADR documents?"
+
+ Agent Query: How did the database incident relate to the architecture decisions in the ADR documents?
+ Answer:
+The agent reached its maximum reasoning steps. The question may require more context than currently available.
+Steps taken: 6
+  Step 1: [list_documents] Corpus index: 5 documents
+  Step 2: [retrieve] Retrieved 5 chunks for query: 'database incident AND (ADR OR architecture decisio'
+  Step 3: [retrieve] Retrieved 3 chunks for query: 'INC-2023-047 AND ADR-012'
+  Step 4: [summarise_document] No chunks found for doc_id: 02_incident_report_INC2023047
+  Step 5: [retrieve] Retrieved 1 chunks for query: 'INC-2023-047'
+  Step 6: [retrieve] Retrieved 1 chunks for query: 'INC-2023-047 incident report'
+ Low confidence — retrieved evidence was sparse or tangential.
+ Sources (10):
+  • [02_incident_report_INC2023047.md] chunk 02_incident_report_inc2023047_0 (score: 0.401)
+  • [04_adr_012_database_scaling.md] chunk 04_adr_012_database_scaling_0 (score: 0.307)
+  • [01_system_architecture.md] chunk 01_system_architecture_1 (score: 0.303)
+  • [04_adr_012_database_scaling.md] chunk 04_adr_012_database_scaling_2 (score: 0.273)
+  • [02_incident_report_INC2023047.md] chunk 02_incident_report_inc2023047_1 (score: 0.255)
+  • [04_adr_012_database_scaling.md] chunk 04_adr_012_database_scaling_2 (score: 0.345)
+  • [02_incident_report_INC2023047.md] chunk 02_incident_report_inc2023047_2 (score: 0.261)
+  • [02_incident_report_INC2023047.md] chunk 02_incident_report_inc2023047_1 (score: 0.209)
+  • [04_adr_012_database_scaling.md] chunk 04_adr_012_database_scaling_2 (score: 0.398)
+  • [04_adr_012_database_scaling.md] chunk 04_adr_012_database_scaling_2 (score: 0.452)
+python3 main.py eval
+
+======================================================================
+DocMind Evaluation Report
+======================================================================
+Q1 [simple_factual] 
+  Q: What is the primary purpose of the authentication service described in the archi
+  A: The primary purpose of the authentication service is to provide a stateless JWT (JSON Web Tokens) with RSA-256 asymmetric signing mechanism to address scalability and security concerns in InfraCore...
+  Confidence: high (expected: high)
+  Steps: 4 | Latency: 3219.4ms | Sources: 3
+  Expected behaviour: Should cite a specific document and give a precise factual answer.
+Q2 [multi_hop] 
+  Q: How did the database incident in the incident report relate to the architecture 
+  A: The agent encountered a parsing error. Please try rephrasing your question....
+  Confidence: low (expected: high)
+  Steps: 0 | Latency: 728.6ms | Sources: 0
+  Expected behaviour: Should retrieve from both incident report and ADR docs and synthesise.
+Q3 [out_of_scope] 
+  Q: What is the current stock price of Anthropic and its projected IPO valuation?
+  A: I couldn't find any information about Anthropic's stock price or IPO valuation within the provided corpus....
+  Confidence: low (expected: low)
+  Steps: 5 | Latency: 60140.2ms | Sources: 30
+  Expected behaviour: Should clearly state it does not have this information in the corpus.
+Q4 [temporal] 
+  Q: What incidents or issues were reported in the most recent documents in the corpu
+  A: The most recent incidents or issues reported in the corpus are related to a database connection saturation event (INC-2023-047) on Black Friday, 2023, which caused a production outage lasting 47 minut...
+  Confidence: high (expected: high)
+  Steps: 5 | Latency: 59329.7ms | Sources: 5
+  Expected behaviour: Should use list_documents or filter_by_date to scope the search.
+Q5 [summarisation] 
+  Q: Give me a high-level overview of all the documents in the corpus. What topics do
+  A: The Black Friday outage was caused by a combination of factors, including the lack of connection-count monitoring alerts and the architecture decision to defer write scaling for PostgreSQL, which led ...
+  Confidence: high (expected: high)
+  Steps: 6 | Latency: 99225.5ms | Sources: 5
+  Expected behaviour: Should call list_documents then summarise_document for each, synthesise.
+======================================================================
+Confidence accuracy: 4/5
+Average latency: 44529ms
+Average agent steps: 4.0
+======================================================================
+python3 main.py interactive
+
+ DocMind AI Agent — Interactive Mode
+Type 'exit' or 'quit' to stop.
+You: what would have prevented the November 2023 outage 
+
+Agent: The agent encountered a parsing error. Please try rephrasing your question.
+ (Low confidence answer)
+You: What is the stock price of apple
+
+Agent: The corpus does not contain information about Apple's stock price.
+ (Low confidence answer)
+You: what does RTNS service depend on from existing infrastructure ?
+
+Agent: The RTNS service depends on the existing InfraCore Redis cluster and AuthCore for authentication.
+You: exit
+Goodbye!
